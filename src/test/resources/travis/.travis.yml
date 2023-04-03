@@ -1,0 +1,52 @@
+sudo: false
+
+language: android
+
+android:
+  components:
+    - build-tools-21.1.1
+    - android-7
+    - addon-google_apis-google-18
+  licenses:
+    - android-sdk-license-5be876d5
+
+jdk:
+  - oraclejdk8
+
+branches:
+  except:
+    - gh-pages
+
+env:
+  global:
+    - secure: "GAkAOv0XSs3UqAdvAuxQrcE8caIA4yad5iBV0WvOxnXgNghScgAojrEwcaTBqvB8OWckuRfBe4kGZKuWIoQbeXqr/EqVAbcGgU4fXzNMXTdAFre7UCR+TNcwS8R4h5JmWj0rrn7eXGp+LCXN9EmLeqecp8ciPrFMqBk4d/0iXPw="
+  matrix:
+    - TARGET_PLATFORM=indigo
+    - TARGET_PLATFORM=juno
+    - TARGET_PLATFORM=kepler
+    - TARGET_PLATFORM=luna
+
+cache:
+  directories:
+    - $HOME/.m2
+
+before_install:
+  # install android sdk dependencies in local repo
+  - git clone https://github.com/mosabua/maven-android-sdk-deployer.git
+  - cd maven-android-sdk-deployer
+  - mvn install -P 4.3
+  - cd ..
+
+  # start windowing session
+  - sh -e /etc/init.d/xvfb start
+
+before_script:
+  - export DISPLAY=:99.0
+  - echo adtUsed=true$'\n'lastSdkPath=$ANDROID_HOME$'\n'pingId=844 > ~/.android/ddms.cfg
+
+script:
+  - mvn install -DskipTests -Dmaven.javadoc.skip=true -B -V
+  - mvn verify -e --file me.gladwell.eclipse.m2e.android.test/pom.xml -Dtarget.platform=$TARGET_PLATFORM -Dtycho.showEclipseLog=true
+
+after_success:
+  - if [[ $TRAVIS_PULL_REQUEST == "false" && $TARGET_PLATFORM == "luna" ]]; then mvn -Dgithub.global.oauth2Token=$GITHUB_AUTH_TOKEN -pl me.gladwell.eclipse.m2e.android.update com.github.github:site-maven-plugin:site; fi

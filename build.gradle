@@ -1,0 +1,195 @@
+plugins {
+    id 'application'
+    id 'java'
+    id 'groovy'
+    id "io.freefair.lombok" version "6.0.0-m2"
+    id "nebula.lint" version "17.1.0"
+}
+
+group = "com.fdse"
+version = "1.0-SNAPSHOT"
+
+//输出中文乱码
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+    maven { url = uri("https://repo.gradle.org/gradle/libs-releases") }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        exceptionFormat "full"
+        showCauses true
+        showExceptions true
+        showStackTraces true
+        showStandardStreams true
+        events = ["passed", "skipped", "failed", "standardOut", "standardError"]
+    }
+}
+
+
+//gradleLint {
+//    rules=['unused-dependency']
+//}
+
+dependencies {
+    implementation 'org.codehaus.groovy:groovy-all:3.0.8'
+    //testCompile("junit", "junit", "4.12")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    // https://mvnrepository.com/artifact/com.ximpleware/vtd-xml
+    implementation("com.ximpleware:vtd-xml:2.13.4")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+    implementation("org.hibernate:hibernate-entitymanager:5.4.30.Final")
+    implementation("mysql:mysql-connector-java:8.0.23")
+    implementation("org.yaml:snakeyaml:1.29")
+
+    implementation("org.eclipse.jgit:org.eclipse.jgit:5.11.0.202103091610-r")
+    implementation("org.apache.maven:maven-model:3.5.2")
+    implementation("org.apache.maven.shared:maven-invoker:3.0.1")
+    implementation("org.gradle:gradle-tooling-api:7.1-rc-1")
+        // The tooling API need an SLF4J implementation available at runtime, replace this with any other implementation
+    runtimeOnly("org.slf4j:slf4j-simple:1.7.10")
+
+    // https://mvnrepository.com/artifact/org.apache.maven.resolver/maven-resolver-util
+    implementation("org.codehaus.groovy.modules.http-builder:http-builder:0.7")
+
+    // https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils
+    implementation('commons-beanutils:commons-beanutils:1.9.4')
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-configuration2
+    implementation("org.apache.commons:commons-configuration2:2.7")
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+
+    implementation("org.apache.poi:poi:4.1.0")
+    implementation("org.apache.poi:poi-ooxml:4.1.0")
+
+}
+
+application {
+    mainClassName = "util.RepositoryScannerKt"
+}
+
+task TravisChecker(type: JavaExec) {
+    main = 'smell.TravisChecker'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task MavenChecker(type: JavaExec) {
+    main = 'smell.MavenChecker'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task GradleOptionChecker(type: JavaExec) {
+    main = 'smell.GradleOptionChecker'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task GradleFileChecker(type: JavaExec) {
+    main = 'smell.GradleFileChecker'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task PullRequestCreator(type: JavaExec) {
+    main = 'PullRequestCreator'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task MavenParser(type: JavaExec){
+    main = 'maven.Demo'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task MavenFixer(type: JavaExec){
+    main = 'smell.MavenFixer'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task localMavenParser(type: JavaExec){
+    main = 'maven.Demo1'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task modifyPOM(type: JavaExec){
+    main = 'maven.Modify'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task PullRequestMavenCreator(type: JavaExec) {
+    main = 'PullRequestMavenCreator'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task GradleFixer(type: JavaExec) {
+    main = 'smell.GradleFixer'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task PullRequestGradleCreator(type: JavaExec) {
+    main = 'PullRequestGradleCreator'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task JVMLanguagesFileNumChecker(type: JavaExec){
+    main = 'smell.checker.JVMLanguagesFileNumChecker'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task ModifyProperties(type: JavaExec){
+    main = 'util.ModifyProperties'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task MavenVersionChecker(type: JavaExec){
+    main = 'smell.checker.MavenVersionChecker'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task POMFixer(type: JavaExec){
+    main = 'smell.fixer.Maven.POMFixer'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task CheckerUpdate(type: JavaExec){
+    main = 'smell.checker.CheckerUpdate'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task TravisTrigger(type: JavaExec){
+    main = 'TravisTrigger'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task TriggerUtil(type: JavaExec){
+    main = 'util.TriggerUtil'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task ExcelUtil(type: JavaExec){
+    main = 'util.ExcelUtil'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task CompilationFixer(type: JavaExec){
+    main = 'smell.fixer.Maven.CompilationFixer'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+
+allprojects {
+    tasks.withType(Test).configureEach {
+        maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+        println(maxParallelForks)
+        if (!project.hasProperty("createReports")) {
+            reports.html.required = false
+            reports.junitXml.required = false
+        }
+    }
+
+}

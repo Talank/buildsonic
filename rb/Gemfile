@@ -1,0 +1,4 @@
+source 'https://rubygems.org'
+gem 'activerecord-jdbcmysql-adapter', '~> 51.0'
+gem 'travis', '~> 1.10'
+gem 'tree-sitter'

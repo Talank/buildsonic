@@ -1,0 +1,15 @@
+task :scan_repo do
+  ruby '-J-Xms4g -J-Xmx4g -Ilib lib/scan_repo.rb'
+end
+
+task :repo_info_crawler do
+  ruby '-J-Xms4g -J-Xmx4g -Ilib lib/repo_info_crawler.rb'
+end
+
+task :clone_repo do
+  ruby '-J-Xms4g -J-Xmx4g -Ilib lib/clone_repo.rb'
+end
+
+task :yml_parser do
+  ruby '-J-Xms4g -J-Xmx4g -Ilib lib/yml_parser.rb'
+end
