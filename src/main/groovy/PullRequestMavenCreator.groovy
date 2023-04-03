@@ -328,6 +328,19 @@ class PullRequestMavenCreator {
 
 
     static void main(String[] args) {
-        createMavenPullRequest(true)
+        // createMavenPullRequest(true)
+        String repoPath = args[0];
+        String originRepoName = args[1];
+
+        List<MavenStrategy> strategies = [MavenStrategy.MAVEN_PARALLEL_EXECUTION, MavenStrategy.MAVEN_FORK_TEST, MavenStrategy.MAVEN_REPORT_GENERATION, MavenStrategy.MAVEN_COMPILER_DAEMON,MavenStrategy.MAVEN_PARALLEL_TEST]
+
+        println("repoPath: " + repoPath)
+        println("originRepoName: " + originRepoName)
+
+        for (MavenStrategy strategy : strategies) {
+            applyFix(repoPath, originRepoName, strategy, false)
+            applyFix(repoPath, originRepoName, strategy, true)
+
+        }
     }
 }
