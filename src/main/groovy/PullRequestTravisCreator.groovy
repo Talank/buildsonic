@@ -211,14 +211,35 @@ class PullRequestTravisCreator {
         println("休息结束，实际休息时间："+(end-start)/60000 + "min")
     }
 
+    static void bsTravisReplica(String[] args){
+        String repoPath = args[0];
+
+        Map<TravisStrategy,StateFlag> strategyWithFlag = new HashMap<>()
+        def strategies = [TravisStrategy.TRAVIS_SHALLOW_CLONE, TravisStrategy.TRAVIS_RETRY, TravisStrategy.TRAVIS_WAIT, TravisStrategy.TRAVIS_CACHE,TravisStrategy.TRAVIS_FAST_FINISH]
+        String ymlFilePath = Paths.get(repoPath, ".travis.yml").normalize().toString()   
+        strategies.each{ TravisStrategy travisStrategy->
+            TravisChecker checker = new TravisChecker(ymlFilePath)     
+            def flag = checker.check(travisStrategy)
+            if(flag!=null){
+                strategyWithFlag.put(travisStrategy,flag)
+            }
+        }
+
+        String gradleFile = Paths.get(repoPath, "build.gradle").normalize().toString()
+        def buildTool = 1
+        if(new File(gradleFile).exists()){
+            buildTool = 2;
+        }
+
+        TravisFixer fixer = new TravisFixer(ymlFilePath)
+        fixer.travisSmellFixer(strategyWithFlag,buildTool)
+    }
+
     static void main(String[] args) {
         //Travis的smell中 cache、fast finish、shallow clone分显式引入和隐式引入
         // wait和retry都只有显式引入
-//        createTravisPullRequest()
-        def test = ['1','2','3','4']
-        test.eachWithIndex{ value,index->
-            test.clear()
-        }
-        test.each {println(it)}
+        //createTravisPullRequest()
+        bsTravisReplica(args)
     }
 }
+
