@@ -12,8 +12,8 @@ import static util.TravisUtil.*
 import java.util.regex.Matcher
 
 class TravisChecker {
-    @PackageScope String TravisFilePath = null
-//    String TravisFilePath
+    //@PackageScope String TravisFilePath = null
+    String TravisFilePath
     String TravisContent
     LinkedHashMap<String, Object> map
     List<String> commands

@@ -126,6 +126,11 @@ task PullRequestMavenCreator(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
+task PullRequestTravisCreator(type: JavaExec) {
+    main = 'PullRequestTravisCreator'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 task GradleFixer(type: JavaExec) {
     main = 'smell.GradleFixer'
     classpath = sourceSets.main.runtimeClasspath
